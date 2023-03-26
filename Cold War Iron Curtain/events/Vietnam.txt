@@ -196,6 +196,168 @@ country_event = {
 		}
 	}
 }
+# The Geneva Conference (hidden trigger)
+country_event = {
+	id = vie.1 
+ immediate = {log = "[GetDateText]: [Root.GetTag]: id = vie.1"}
+	hidden = yes
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	immediate = {
+		FRA = { country_event = vie.2 }
+		VIE = { country_event = vie.4 }
+	}
+}
+
+# The Geneva Conference (Preload)
+country_event = {
+	id = vie.2 
+ immediate = {log = "[GetDateText]: [Root.GetTag]: id = vie.2"}
+	title = vie.2.t
+	desc = vie.2.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = vie.2.a
+		hidden_effect = {
+			set_global_flag = FRA_yes_Geneva
+		}
+		ai_chance = {
+			factor = 98
+		}
+	}
+
+	option = {
+		name = vie.2.b
+		ai_chance = {
+			factor = 2
+		}
+	}
+
+}
+
+# The Geneva Conference
+news_event = {
+	id = vie.3 
+ immediate = {log = "[GetDateText]: [Root.GetTag]: id = vie.3"}
+	title = vie.3.t
+	desc = vie.3.d
+	picture = GFX_report_event_geneve_accords
+
+	is_triggered_only = yes
+
+	major = yes
+
+	immediate = {
+		hidden_effect = {
+			country_event = vie.5
+			set_global_flag = Geneva_Conference
+			clr_country_flag = indochina_french_war
+		}
+	}
+
+	option = {
+		name = vie.3.a
+		trigger = { tag = VIN }
+	}
+
+	option = {
+		name = vie.3.b
+		trigger = { NOT = { tag = VIN } }
+	}
+}
+
+# The Geneva Conference (Preload)
+country_event = {
+	id = vie.4 
+ immediate = {log = "[GetDateText]: [Root.GetTag]: id = vie.4"}
+	title = vie.4.t
+	desc = vie.4.d
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = vie.4.a
+
+		hidden_effect = {
+			set_global_flag = VIE_yes_Geneva
+		}
+		ai_chance = {
+			factor = 98
+		}
+	}
+
+	option = {
+		name = vie.4.b
+		ai_chance = {
+			factor = 2
+		}
+	}
+
+}
+
+# The Geneva Conference
+country_event = {
+	id = vie.5 
+ immediate = {log = "[GetDateText]: [Root.GetTag]: id = vie.5"}
+	hidden = yes
+
+	fire_only_once = yes
+
+	is_triggered_only = yes
+
+	immediate = {
+		FRA = {
+			white_peace = VIN
+			set_autonomy = { target = CAM autonomy_state = autonomy_free }
+			set_autonomy = { target = VIE autonomy_state = autonomy_free }
+			set_autonomy = { target = LOS autonomy_state = autonomy_free }
+		}
+		VIE = {
+			white_peace = VIN
+			transfer_state = 757
+			transfer_state = 982
+			transfer_state = 286
+			transfer_state = 1287
+			transfer_state = 983
+			leave_faction = yes
+		}
+		VIN = {
+			transfer_state = 838
+			transfer_state = 786
+			transfer_state = 671
+			transfer_state = 881
+			transfer_state = 1280
+			transfer_state = 1281
+			set_capital = { state = 786 }
+			complete_national_focus = VIN_Ratification_of_the_Geneva_Accords
+		}
+		CAM = {
+			drop_cosmetic_tag = yes
+			white_peace = VIN
+			leave_faction = yes
+
+		}
+		LOS = {
+			drop_cosmetic_tag = yes
+			white_peace = VIN
+			leave_faction = yes
+
+		}
+
+		country_event = { id = vie.6 days = 1 } 
+	}
+
+	option = { }
+
+}
 # 17th North / South DMZ failsafe event
 country_event = {
 	id = vie.6 
@@ -228,5 +390,131 @@ country_event = {
 			annex_country = { target = VIN transfer_troops = no }
 		}
 	}
-
 }
+
+# Startup, spit out French Cochinchina
+
+country_event = {
+  id = vie.10
+  hidden = yes
+  
+  is_triggered_only = yes
+  
+  immediate = {
+    log = "[GetDateText]: [Root.GetTag]: id = vie.10"
+	}
+	
+	immediate = {
+	  #FRA = {
+	  #  activate_mission = VIE_Mission_Merge_With_French_Cochinchina
+    #  if = {
+    #    limit = { has_dlc = "Together for Victory" }
+    #    set_autonomy = {
+    #  		target = NLF
+    #  		autonomous_state = autonomy_protectorate
+    #  		freedom_level = 0.1
+    #  	 }
+    #  }
+    #  else = {
+    #    puppet = NLF
+    #  }
+	  #}
+	  #NLF = {
+	  #  gets control of south vietnam
+	  #  setup govt of french cochinchina
+	  #  set_cosmetic_tag = NLF_FRA
+	  #}
+	  # activate_mission = VIE_Mission_Merge_With_French_Cochinchina
+	}
+}
+
+# Merge with French Cochinchina
+
+news_event = {
+  id = vie.11
+  title = vie.11.t
+  desc = vie.11.d
+  
+  is_triggered_only = yes
+  major = no
+  
+  immediate = {
+    log = "[GetDateText]: [Root.GetTag]: id = vie.11"
+  }
+  
+  option = {
+    name = vie.11.a # One step closer to a united Vietnam
+    trigger = { tag = VIE }
+    
+    add_war_support = 0.025
+    add_political_power = 50
+    
+    annex_country = {
+      target = NLF
+      transfer_troops = no
+    }
+    
+    hidden_effect = {
+      LAO = { news_event = vie.11 }
+      CAM = { news_event = vie.11 }
+      VIN = { news_event = vie.11 }
+      
+      NLF = {
+        drop_cosmetic_tag = yes
+        # reset country
+      }
+    }
+  }
+  option = {
+    name = vie.11.a # One step closer to a united Vietnam
+    trigger = { tag = VIN }
+    add_war_support = 0.025
+  }
+  option = {
+    name = vie.11.b # We've been putting it off for a while...
+    trigger = { tag = FRA }
+    
+    custom_effect_tooltip = vie.11.b_tt
+    
+    hidden_effect = {
+      if = {
+        limit = {
+          has_dlc = "Together for Victory"
+        }
+        #set_autonomy = {
+      	#	target = NLF
+      	#	autonomous_state = autonomy_free
+      	#	freedom_level = 1.0
+      	#}
+      }
+      else = {
+        # release = NLF
+      }
+      
+      ENG = { news_event = vie.11 }
+      USA = { news_event = vie.11 }
+      CHI = { news_event = vie.11 }
+      PRC = { news_event = vie.11 }
+      SOV = { news_event = vie.11 }
+    }
+  }
+  option = {
+    name = vie.11.c # Decolonization or a Smoke Screen?
+    trigger = { OR = { tag = LAO tag = CAM } }
+  }
+  option = {
+    name = vie.11.e # Hopefully a new ally against the Red
+    trigger = { OR = { tag = ENG tag = USA tag = CHI } }
+  }
+  option = {
+    name = vie.11.f # Pah! A new name for the same abuse!
+    trigger = { OR = { tag = PRC tag = SOV } }
+  }
+}
+
+
+
+
+
+
+
